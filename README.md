@@ -1,0 +1,4 @@
+CoinFlipFP
+==========
+
+Practice Functional Programming
