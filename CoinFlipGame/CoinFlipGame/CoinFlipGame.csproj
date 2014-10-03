@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FunctionalProgramming">
-      <HintPath>bin\FunctionalProgramming.dll</HintPath>
+      <HintPath>..\..\..\..\FunctionalProgramming\FunctionalProgramming\bin\Debug\FunctionalProgramming.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
