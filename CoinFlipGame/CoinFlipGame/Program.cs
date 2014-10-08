@@ -13,6 +13,8 @@ namespace CoinFlipGame
     {
         private static readonly int MinNr = new Random().Next(), MaxNr = new Random().Next(MinNr);
         private static readonly CoinFace[] TheFaces = { new CoinFace { ShortName = "t", Name = "Tail" }, new CoinFace { ShortName = "h", Name = "Head" } };
+        private const string Demand = "Head (h), Tail (t), or Quit (q)?";
+        
         class CoinFace
         {
             public string ShortName { get; set; }
@@ -29,7 +31,7 @@ namespace CoinFlipGame
         static void Main(string[] args)
         {
             var toEnumerable = TheFaces.AsQueryable();
-            Console.WriteLine("Head (h), Tail (t), or Quit (q)?");
+            Console.WriteLine(Demand);
             var maybeCommand = ProcessCommand(Console.ReadLine());
             //GetOrElse returns true if the user input is not a command
             while (maybeCommand.Select(command => command != Command.Quit).GetOrElse(() => true))
@@ -37,21 +39,19 @@ namespace CoinFlipGame
                 var isHeadsOrTails = maybeCommand.Select(command => command != Command.Quit).GetOrElse(() => false);
                 if (isHeadsOrTails)
                 {
-
-                    ForEach(Rnr((int) DateTime.Now.Ticks, 8).Take(20), Console.WriteLine);
-
+                    var minNr = (int) DateTime.Now.Ticks;
+                    ForEach(Rnr(minNr, minNr + 1).Take(20), Console.WriteLine);
                     var tossed = GetResult(Randomizer(MinNr, MaxNr));
-                    //var userInput = Console.ReadLine().ToMaybe();
+
                     Console.WriteLine("Result: {0}", tossed);
-                    //Console.WriteLine("Your Answer: " + userInput.ToString());
-                    //Console.WriteLine(from c in TheFaces.FirstOrDefault(x => x.Name == userInput.ToString()).ToMaybe() select c.Name);
+
                     if (Compare(tossed, maybeCommand))
                     {
                         Console.WriteLine("You win.");
                     }
                     else
                     {
-                        Console.WriteLine("Nope!" + from t in toEnumerable.SingleOrDefault(x => x.ShortName == Convert(tossed)).ToMaybe() select t.Name);
+                        Console.WriteLine("Nope! It's {0}", from t in toEnumerable.SingleOrDefault(x => x.ShortName == Convert(tossed)).ToMaybe() select t.Name);
                     }
 
                 }
@@ -59,7 +59,7 @@ namespace CoinFlipGame
                 {
                     Console.WriteLine("I'm sorry. I am unable to understand that.");
                 }
-                Console.WriteLine("Head (h), Tail (t), or Quit (q)?");
+                Console.WriteLine(Demand);
                 maybeCommand = ProcessCommand(Console.ReadLine());
             }
             Console.WriteLine("GoodBye");
@@ -100,6 +100,12 @@ namespace CoinFlipGame
                 action(t);
                 return u;
             };
+        }
+
+        //TODO: return head or tail based on average of 20 tossed results
+        static IMaybe<string> GetResult(IStream<int> s)
+        {
+            return null;
         }
 
         static IMaybe<string> GetResult(int theNumber)
